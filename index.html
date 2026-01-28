@@ -374,15 +374,6 @@
         });
 
         // ==================== CALLBACKS FROM FLUTTER APP ====================
-        
-        // Callback khi app lưu credentials thành công
-        window.credentialsSaved = function(status) {
-            addLog(`Credentials saved: ${status}`, 'success');
-            if (status === 'success') {
-                showMessage('✅ Thông tin đã được lưu an toàn!', 'success');
-            }
-        };
-
         // Callback khi app gửi credentials về sau khi xác thực sinh trắc học
         window.credentialsRetrieved = function(data) {
             addLog('Credentials retrieved from app', 'success');
@@ -404,7 +395,7 @@
                 
                 setTimeout(() => {
                     loginForm.dispatchEvent(new Event('submit'));
-                }, 300);
+                }, 500);
             } else {
                 addLog('Invalid credentials format', 'error');
                 showMessage('❌ Lỗi định dạng dữ liệu', 'error');
@@ -419,8 +410,8 @@
 
         // Callback khi check biometric available
         window.biometricAvailable = function(available) {
-            addLog(`Biometric available: ${available}`, 'info');
-            if (available === 'false') {
+            if (available === 'false') {            
+                addLog(`Biometric error: ${error}`, 'error');
                 showMessage('⚠️ Thiết bị không hỗ trợ sinh trắc học', 'error');
                 document.getElementById('biometricToggle').style.display = 'none';
             }
@@ -456,7 +447,7 @@
                 setTimeout(() => {
                     addLog('Auto-requesting credentials on page load', 'info');
                     sendToApp('biometric', 'request_credentials');
-                }, 200);
+                }, 500);
             }
         });
 
