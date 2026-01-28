@@ -449,7 +449,7 @@
             const wasBiometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
             const lastUserId = localStorage.getItem('lastUserId');
             
-            if (biometricAvailable && wasBiometricEnabled && lastUserId) {
+            if (biometricAvailable == "true" && wasBiometricEnabled && lastUserId) {
                 // ĐÃ CÓ BIOMETRIC TRƯỚC ĐÓ
                 biometricEnabled = true;
                 toggleSwitch.classList.add('active');
