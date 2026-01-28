@@ -335,23 +335,33 @@
 
             addLog(`Login attempt: userId=${userId}`, 'info');
 
-            if (biometricEnabled) {
-                // LẦN ĐẦU: Gửi credentials về app để lưu vào secure storage
-                // Format: biometric=save_credentials:userId:password
+            // Kiểm tra xem có phải đang trong flow biometric auto-fill không
+            const isAutoFill = userIdInput.dataset.autoFilled === 'true';
+            
+            if (biometricEnabled && !isAutoFill) {
+                // FLOW LẦN ĐẦU: User nhập id/pass -> bật toggle -> bấm login
+                // => Gửi credentials về app để lưu vào secure storage
+                addLog('First time login with biometric enabled', 'info');
                 const credentials = `save_credentials:${userId}:${password}`;
                 sendToApp('biometric', credentials);
                 
+                // Lưu trạng thái local
                 localStorage.setItem('biometricEnabled', 'true');
                 localStorage.setItem('lastUserId', userId);
 
                 showMessage('✅ Đăng nhập thành công! Sinh trắc học đã được cấu hình.', 'success');
+                
+                // Hiển thị nút đăng nhập sinh trắc học cho lần sau
                 biometricLoginBtn.classList.add('show');
                 
             } else {
-                addLog('Normal login (biometric not enabled)', 'info');
+                // Normal login hoặc auto-fill từ biometric
+                addLog('Normal login or biometric auto-fill', 'info');
                 showMessage('✅ Đăng nhập thành công!', 'success');
             }
 
+            // Reset auto-fill flag
+            delete userIdInput.dataset.autoFilled;
             isLoggedIn = true;
         });
 
@@ -360,7 +370,7 @@
             addLog('Requesting biometric authentication', 'info');
             showMessage('🔐 Đang xác thực sinh trắc học...', 'info');
             
-            // Gửi yêu cầu lấy credentials từ app
+            // FLOW LẦN 2: Click nút biometric -> gửi request về app
             sendToApp('biometric', 'request_credentials');
         });
 
@@ -389,12 +399,12 @@
                 // Tự động fill form
                 userIdInput.value = userId;
                 passwordInput.value = password;
+                userIdInput.dataset.autoFilled = 'true'; // Đánh dấu là auto-fill
                 
                 showMessage('✅ Xác thực thành công! Đang đăng nhập...', 'success');
                 
                 // Auto submit sau 500ms
                 setTimeout(() => {
-                    biometricEnabled = false; // Tạm tắt để không lưu lại
                     loginForm.dispatchEvent(new Event('submit'));
                 }, 500);
             } else {
@@ -414,7 +424,7 @@
             addLog(`Biometric available: ${available}`, 'info');
             if (available === 'false') {
                 showMessage('⚠️ Thiết bị không hỗ trợ sinh trắc học', 'error');
-                toggleSwitch.style.display = 'none';
+                document.getElementById('biometricToggle').style.display = 'none';
             }
         };
 
@@ -437,13 +447,30 @@
             const lastUserId = localStorage.getItem('lastUserId');
             
             if (wasBiometricEnabled && lastUserId) {
+                // ĐÃ CÓ BIOMETRIC TRƯỚC ĐÓ
                 biometricEnabled = true;
                 toggleSwitch.classList.add('active');
                 biometricLoginBtn.classList.add('show');
+                
                 addLog(`Biometric previously enabled for user: ${lastUserId}`, 'info');
                 showMessage(`Chào mừng trở lại! Bạn có thể dùng sinh trắc học.`, 'info');
+                
+                // TỰ ĐỘNG GỌI REQUEST CREDENTIALS
+                setTimeout(() => {
+                    addLog('Auto-requesting credentials on page load', 'info');
+                    sendToApp('biometric', 'request_credentials');
+                }, 1000);
             }
         });
+
+        // ==================== TEST FUNCTIONS (for debugging on browser) ====================
+        window.testReceiveCredentials = function() {
+            const testCredentials = {
+                userId: 'testuser',
+                password: 'testpass123'
+            };
+            window.credentialsRetrieved('testuser:testpass123');
+        };
     </script>
 </body>
 </html>
