@@ -422,7 +422,7 @@
         };
 
         // ==================== INITIALIZATION ====================
-        window.addEventListener('load', () => {
+        window.addEventListener('load', async () => {
             addLog('WebView loaded successfully', 'success');
             updateUI();
             // Kiểm tra channel
@@ -435,18 +435,16 @@
                 addLog('⚠ nativeMethod channel NOT detected', 'error');
             }
 
-            setTimeout(() => {
+            await setTimeout(() => {
                 addLog(`isEnableBiometricSupport2 ${isEnableBiometricSupport}`, 'info');
-            }, 300);
+            }, 350);
 
-            addLog(`isEnableBiometricSupport ${isEnableBiometricSupport}`, 'info');
-            addLog(`isEnableBiometricSupport check  ${isEnableBiometricSupport === true}`, 'info');
             // Kiểm tra biometric đã được enable trước đó chưa
             const wasBiometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
             const lastUserId = localStorage.getItem('lastUserId');
             addLog(`isEnableBiometricSupport check 3  ${isEnableBiometricSupport && wasBiometricEnabled && lastUserId}`, 'info');
             
-            if (wasBiometricEnabled && lastUserId) {
+            if (isEnableBiometricSupport && wasBiometricEnabled && lastUserId) {
                 // ĐÃ CÓ BIOMETRIC TRƯỚC ĐÓ
                 biometricEnabled = true;
                 toggleSwitch.classList.add('active');
