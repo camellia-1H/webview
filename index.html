@@ -408,34 +408,48 @@
             showMessage(`❌ ${error}`, 'error');
         };
 
+        function checkBiometricAvailable() {
+            return new Promise((resolve) => {
+                window._resolveBiometricAvailable = resolve;
+                sendToApp('biometric', 'check_biometric_available');
+            });
+        }
+
         // Callback khi check biometric available
         window.biometricAvailable = function(available) {
-            if (available === 'false') {            
-                addLog(`Biometric error: ${error}`, 'error');
+            addLog(`Biometric available: ${available}`, 'info');
+
+            if (available === 'false') {
                 showMessage('⚠️ Thiết bị không hỗ trợ sinh trắc học', 'error');
                 document.getElementById('biometricToggle').style.display = 'none';
+            }
+
+            // 🔑 resolve promise
+            if (window._resolveBiometricAvailable) {
+                window._resolveBiometricAvailable(available === 'true');
+                delete window._resolveBiometricAvailable;
             }
         };
 
         // ==================== INITIALIZATION ====================
-        window.addEventListener('load', () => {
+        window.addEventListener('load', async () => {
             addLog('WebView loaded successfully', 'success');
             updateUI();
             // Kiểm tra channel
-            if (window.nativeMethod) {
-                addLog('✓ nativeMethod channel detected', 'success');
-                
-                // Kiểm tra biometric có available không
-                sendToApp('biometric', 'check_biometric_available');
-            } else {
+            if(!window.nativeMethod) {
                 addLog('⚠ nativeMethod channel NOT detected', 'error');
+                return;
             }
+
+            addLog('✓ nativeMethod channel detected', 'success');
+            
+            const biometricAvailable = await checkBiometricAvailable();
             
             // Kiểm tra biometric đã được enable trước đó chưa
             const wasBiometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
             const lastUserId = localStorage.getItem('lastUserId');
             
-            if (wasBiometricEnabled && lastUserId) {
+            if (biometricAvailable && wasBiometricEnabled && lastUserId) {
                 // ĐÃ CÓ BIOMETRIC TRƯỚC ĐÓ
                 biometricEnabled = true;
                 toggleSwitch.classList.add('active');
