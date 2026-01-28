@@ -409,7 +409,16 @@
         };
 
         function checkBiometricAvailable() {
+            // return new Promise((resolve) => {
+            //     window._resolveBiometricAvailable = resolve;
+            //     sendToApp('biometric', 'check_biometric_available');
+            // });
             return new Promise((resolve) => {
+                if (biometricAvailableCache !== null) {
+                    resolve(biometricAvailableCache);
+                    return;
+                }
+
                 window._resolveBiometricAvailable = resolve;
                 sendToApp('biometric', 'check_biometric_available');
             });
@@ -417,16 +426,24 @@
 
         // Callback khi check biometric available
         window.biometricAvailable = function(available) {
+            // if (available === 'false') {
+            //     showMessage('⚠️ Thiết bị không hỗ trợ sinh trắc học', 'error');
+            //     document.getElementById('biometricToggle').style.display = 'none';
+            // }
+
+            // // 🔑 resolve promise
+            // if (window._resolveBiometricAvailable) {
+            //     window._resolveBiometricAvailable(available === 'true');
+            //     delete window._resolveBiometricAvailable;
+            // }
+
+            const isAvailable = available === 'true';
+            biometricAvailableCache = isAvailable;
+
             addLog(`Biometric available: ${available}`, 'info');
 
-            if (available === 'false') {
-                showMessage('⚠️ Thiết bị không hỗ trợ sinh trắc học', 'error');
-                document.getElementById('biometricToggle').style.display = 'none';
-            }
-
-            // 🔑 resolve promise
             if (window._resolveBiometricAvailable) {
-                window._resolveBiometricAvailable(available === 'true');
+                window._resolveBiometricAvailable(isAvailable);
                 delete window._resolveBiometricAvailable;
             }
         };
