@@ -444,13 +444,13 @@
             addLog('✓ nativeMethod channel detected', 'success');
             
             const biometricAvailable = await checkBiometricAvailable();
-            addLog(`Biometric available: ${biometricAvailable}`, 'info');
+            addLog(`Biometric available check: ${biometricAvailable == "true"}`, 'info');
              
             // Kiểm tra biometric đã được enable trước đó chưa
             const wasBiometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
             const lastUserId = localStorage.getItem('lastUserId');
             
-            if (biometricAvailable == "true" && wasBiometricEnabled && lastUserId) {
+            if (wasBiometricEnabled && lastUserId) {
                 // ĐÃ CÓ BIOMETRIC TRƯỚC ĐÓ
                 biometricEnabled = true;
                 toggleSwitch.classList.add('active');
