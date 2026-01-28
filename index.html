@@ -4,264 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tafusuma Login - WebView Demo</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 400px;
-            width: 100%;
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo h1 {
-            color: #667eea;
-            font-size: 32px;
-            font-weight: 700;
-        }
-
-        .logo p {
-            color: #666;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        input[type="text"]:focus,
-        input[type="password"]:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .biometric-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-            background: #f5f5f5;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .biometric-toggle label {
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .biometric-icon {
-            font-size: 24px;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 26px;
-            background-color: #ccc;
-            border-radius: 13px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .toggle-switch.active {
-            background-color: #667eea;
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background-color: white;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s;
-        }
-
-        .toggle-switch.active::after {
-            transform: translateX(24px);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-biometric {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .btn-biometric:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.3);
-        }
-
-        .btn-biometric.show {
-            display: block;
-        }
-
-        .status-message {
-            margin-top: 20px;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 14px;
-            display: none;
-        }
-
-        .status-message.show {
-            display: block;
-        }
-
-        .status-message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .status-message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .status-message.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
-        .debug-panel {
-            margin-top: 30px;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 10px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .debug-panel h3 {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .debug-panel pre {
-            background: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            overflow-x: auto;
-            color: #333;
-        }
-
-        .hidden {
-            display: none;
-        }
-    </style>
+    <!-- ... existing styles ... -->
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <h1>🔐 Tafusuma</h1>
-            <p>WebView Biometric Login Demo</p>
-        </div>
-
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="userId">User ID</label>
-                <input type="text" id="userId" placeholder="Nhập User ID" required>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Nhập Password" required>
-            </div>
-
-            <div class="biometric-toggle" id="biometricToggle">
-                <label>
-                    <span class="biometric-icon">👆</span>
-                    <span>Bật đăng nhập sinh trắc học</span>
-                </label>
-                <div class="toggle-switch" id="toggleSwitch"></div>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Đăng nhập</button>
-            <button type="button" class="btn btn-biometric" id="biometricLoginBtn">
-                🔓 Đăng nhập bằng sinh trắc học
-            </button>
-        </form>
-
-        <div class="status-message" id="statusMessage"></div>
-
-        <div class="debug-panel">
-            <h3>📡 Communication Log</h3>
-            <pre id="debugLog">Waiting for events...</pre>
-        </div>
-    </div>
-
+    <!-- ... existing HTML ... -->
+    
     <script>
         // ==================== STATE MANAGEMENT ====================
         let biometricEnabled = false;
@@ -290,6 +37,19 @@
             setTimeout(() => {
                 statusMessage.classList.remove('show');
             }, 3000);
+        }
+
+        // ==================== SEND TO FLUTTER APP ====================
+        function sendToApp(key, value) {
+            const message = `${key}=${value}`;
+            addLog(`Sending to app: ${message}`, 'info');
+            
+            if (window.nativeMethod) {
+                window.nativeMethod.postMessage(message);
+                addLog('✓ Message sent via nativeMethod', 'success');
+            } else {
+                addLog('⚠ nativeMethod channel not found', 'error');
+            }
         }
 
         // ==================== BIOMETRIC TOGGLE ====================
@@ -322,34 +82,16 @@
 
             addLog(`Login attempt: userId=${userId}`, 'info');
 
-            // Giả lập đăng nhập thành công
             if (biometricEnabled) {
-                // LẦN ĐẦU: Gửi thông tin về app để lưu vào secure storage
-                const credentials = {
-                    action: 'save_credentials',
-                    userId: userId,
-                    password: password,
-                    timestamp: new Date().toISOString()
-                };
-
-                addLog('Sending credentials to app for storage', 'success');
-                addLog(JSON.stringify(credentials, null, 2), 'success');
-
-                // Gửi message đến Flutter app qua JavaScript Channel
-                if (window.BiometricAuth) {
-                    window.BiometricAuth.postMessage(JSON.stringify(credentials));
-                    addLog('Message sent via BiometricAuth channel', 'success');
-                } else {
-                    addLog('WARNING: BiometricAuth channel not found (not in Flutter app)', 'error');
-                }
-
-                // Lưu trạng thái local
+                // LẦN ĐẦU: Gửi credentials về app để lưu vào secure storage
+                // Format: biometric=save_credentials:userId:password
+                const credentials = `save_credentials:${userId}:${password}`;
+                sendToApp('biometric', credentials);
+                
                 localStorage.setItem('biometricEnabled', 'true');
                 localStorage.setItem('lastUserId', userId);
 
                 showMessage('✅ Đăng nhập thành công! Sinh trắc học đã được cấu hình.', 'success');
-                
-                // Hiển thị nút đăng nhập sinh trắc học cho lần sau
                 biometricLoginBtn.classList.add('show');
                 
             } else {
@@ -362,54 +104,80 @@
 
         // ==================== BIOMETRIC LOGIN ====================
         biometricLoginBtn.addEventListener('click', () => {
-            addLog('Biometric login requested', 'info');
-
+            addLog('Requesting biometric authentication', 'info');
+            showMessage('🔐 Đang xác thực sinh trắc học...', 'info');
+            
             // Gửi yêu cầu lấy credentials từ app
-            const request = {
-                action: 'request_credentials',
-                timestamp: new Date().toISOString()
-            };
-
-            addLog('Requesting credentials from app', 'info');
-            addLog(JSON.stringify(request, null, 2), 'info');
-
-            if (window.BiometricAuth) {
-                window.BiometricAuth.postMessage(JSON.stringify(request));
-                addLog('Request sent via BiometricAuth channel', 'success');
-                showMessage('🔐 Đang xác thực sinh trắc học...', 'info');
-            } else {
-                addLog('WARNING: BiometricAuth channel not found (not in Flutter app)', 'error');
-                showMessage('⚠️ Không thể kết nối với app', 'error');
-            }
+            sendToApp('biometric', 'request_credentials');
         });
 
-        // ==================== RECEIVE CREDENTIALS FROM APP ====================
-        // Hàm này sẽ được gọi từ Flutter app sau khi xác thực sinh trắc học thành công
-        window.onReceiveCredentials = function(credentials) {
-            addLog('Received credentials from app', 'success');
-            addLog(JSON.stringify(credentials, null, 2), 'success');
+        // ==================== CALLBACKS FROM FLUTTER APP ====================
+        
+        // Callback khi app lưu credentials thành công
+        window.credentialsSaved = function(status) {
+            addLog(`Credentials saved: ${status}`, 'success');
+            if (status === 'success') {
+                showMessage('✅ Thông tin đã được lưu an toàn!', 'success');
+            }
+        };
 
-            if (credentials && credentials.userId && credentials.password) {
-                // Tự động fill và submit form
-                userIdInput.value = credentials.userId;
-                passwordInput.value = credentials.password;
+        // Callback khi app gửi credentials về sau khi xác thực sinh trắc học
+        window.credentialsRetrieved = function(data) {
+            addLog('Credentials retrieved from app', 'success');
+            
+            // Format: userId:password
+            const parts = data.split(':');
+            if (parts.length === 2) {
+                const userId = parts[0];
+                const password = parts[1];
                 
-                addLog(`Auto-login with userId: ${credentials.userId}`, 'success');
-                showMessage('✅ Xác thực sinh trắc học thành công! Đang đăng nhập...', 'success');
-
+                addLog(`Auto-login with userId: ${userId}`, 'success');
+                
+                // Tự động fill form
+                userIdInput.value = userId;
+                passwordInput.value = password;
+                
+                showMessage('✅ Xác thực thành công! Đang đăng nhập...', 'success');
+                
                 // Auto submit sau 500ms
                 setTimeout(() => {
+                    biometricEnabled = false; // Tạm tắt để không lưu lại
                     loginForm.dispatchEvent(new Event('submit'));
                 }, 500);
             } else {
-                addLog('Invalid credentials received', 'error');
-                showMessage('❌ Xác thực thất bại', 'error');
+                addLog('Invalid credentials format', 'error');
+                showMessage('❌ Lỗi định dạng dữ liệu', 'error');
+            }
+        };
+
+        // Callback khi có lỗi biometric
+        window.biometricError = function(error) {
+            addLog(`Biometric error: ${error}`, 'error');
+            showMessage(`❌ ${error}`, 'error');
+        };
+
+        // Callback khi check biometric available
+        window.biometricAvailable = function(available) {
+            addLog(`Biometric available: ${available}`, 'info');
+            if (available === 'false') {
+                showMessage('⚠️ Thiết bị không hỗ trợ sinh trắc học', 'error');
+                toggleSwitch.style.display = 'none';
             }
         };
 
         // ==================== INITIALIZATION ====================
         window.addEventListener('load', () => {
             addLog('WebView loaded successfully', 'success');
+            
+            // Kiểm tra channel
+            if (window.nativeMethod) {
+                addLog('✓ nativeMethod channel detected', 'success');
+                
+                // Kiểm tra biometric có available không
+                sendToApp('biometric', 'check_biometric_available');
+            } else {
+                addLog('⚠ nativeMethod channel NOT detected', 'error');
+            }
             
             // Kiểm tra biometric đã được enable trước đó chưa
             const wasBiometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
@@ -420,26 +188,9 @@
                 toggleSwitch.classList.add('active');
                 biometricLoginBtn.classList.add('show');
                 addLog(`Biometric previously enabled for user: ${lastUserId}`, 'info');
-                showMessage(`Chào mừng trở lại! Bạn có thể dùng sinh trắc học để đăng nhập.`, 'info');
-            }
-
-            // Kiểm tra JavaScript Channel
-            if (window.BiometricAuth) {
-                addLog('BiometricAuth channel detected ✓', 'success');
-            } else {
-                addLog('BiometricAuth channel NOT detected (normal web browser)', 'info');
+                showMessage(`Chào mừng trở lại! Bạn có thể dùng sinh trắc học.`, 'info');
             }
         });
-
-        // ==================== TEST FUNCTIONS (for debugging) ====================
-        // Hàm test để simulate nhận credentials từ app (chỉ dùng khi test trên browser)
-        window.testReceiveCredentials = function() {
-            const testCredentials = {
-                userId: 'testuser',
-                password: 'testpass123'
-            };
-            window.onReceiveCredentials(testCredentials);
-        };
     </script>
 </body>
 </html>
