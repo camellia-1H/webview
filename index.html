@@ -249,9 +249,6 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Đăng nhập</button>
-            <button type="button" class="btn btn-biometric" id="biometricLoginBtn">
-                🔓 Đăng nhập bằng sinh trắc học
-            </button>
         </form>
 
         <div class="status-message" id="statusMessage"></div>
@@ -273,7 +270,6 @@
         const userIdInput = document.getElementById('userId');
         const passwordInput = document.getElementById('password');
         const toggleSwitch = document.getElementById('toggleSwitch');
-        const biometricLoginBtn = document.getElementById('biometricLoginBtn');
         const statusMessage = document.getElementById('statusMessage');
         const debugLogElement = document.getElementById('debugLog');
 
@@ -317,7 +313,6 @@
                 addLog('Biometric disabled by user', 'info');
                 showMessage('Sinh trắc học đã được tắt', 'info');
                 localStorage.removeItem('biometricEnabled');
-                biometricLoginBtn.classList.remove('show');
             }
         });
 
@@ -350,10 +345,6 @@
                 localStorage.setItem('lastUserId', userId);
 
                 showMessage('✅ Đăng nhập thành công! Sinh trắc học đã được cấu hình.', 'success');
-                
-                // Hiển thị nút đăng nhập sinh trắc học cho lần sau
-                biometricLoginBtn.classList.add('show');
-                
             } else {
                 // Normal login hoặc auto-fill từ biometric
                 addLog('Normal login or biometric auto-fill', 'info');
@@ -363,15 +354,6 @@
             // Reset auto-fill flag
             delete userIdInput.dataset.autoFilled;
             isLoggedIn = true;
-        });
-
-        // ==================== BIOMETRIC LOGIN ====================
-        biometricLoginBtn.addEventListener('click', () => {
-            addLog('Requesting biometric authentication', 'info');
-            showMessage('🔐 Đang xác thực sinh trắc học...', 'info');
-            
-            // FLOW LẦN 2: Click nút biometric -> gửi request về app
-            sendToApp('biometric', 'request_credentials');
         });
 
         // ==================== CALLBACKS FROM FLUTTER APP ====================
@@ -450,7 +432,6 @@
                 // ĐÃ CÓ BIOMETRIC TRƯỚC ĐÓ
                 biometricEnabled = true;
                 toggleSwitch.classList.add('active');
-                biometricLoginBtn.classList.add('show');
                 
                 addLog(`Biometric previously enabled for user: ${lastUserId}`, 'info');
                 showMessage(`Chào mừng trở lại! Bạn có thể dùng sinh trắc học.`, 'info');
@@ -459,7 +440,7 @@
                 setTimeout(() => {
                     addLog('Auto-requesting credentials on page load', 'info');
                     sendToApp('biometric', 'request_credentials');
-                }, 1000);
+                }, 100);
             }
         });
 
