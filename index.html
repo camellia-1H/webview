@@ -438,7 +438,10 @@
             addLog('✓ nativeMethod channel detected', 'success');
             
             checkBiometricAvailable()
-            setTimeout(() => {}, 300);
+            setTimeout(() => {
+                addLog(`isEnableBiometricSupport ${isEnableBiometricSupport}`, 'info');
+            }, 300);
+            addLog(`isEnableBiometricSupport ${isEnableBiometricSupport}`, 'info');
             // Kiểm tra biometric đã được enable trước đó chưa
             const wasBiometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
             const lastUserId = localStorage.getItem('lastUserId');
