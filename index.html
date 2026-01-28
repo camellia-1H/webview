@@ -288,6 +288,8 @@
         const container = document.querySelector('.container');
         const loggedInScreen = document.getElementById('loggedInScreen');
 
+        let isEnableBiometricSupport = false;
+
         // ==================== UTILITY FUNCTIONS ====================
         function addLog(message, type = 'info') {
             const timestamp = new Date().toLocaleTimeString();
@@ -409,47 +411,22 @@
         };
 
         function checkBiometricAvailable() {
-            // return new Promise((resolve) => {
-            //     window._resolveBiometricAvailable = resolve;
-            //     sendToApp('biometric', 'check_biometric_available');
-            // });
-            return new Promise((resolve) => {
-                if (biometricAvailableCache !== null) {
-                    resolve(biometricAvailableCache);
-                    return;
-                }
-
-                window._resolveBiometricAvailable = resolve;
-                sendToApp('biometric', 'check_biometric_available');
-            });
+            sendToApp('biometric', 'check_biometric_available');
         }
 
         // Callback khi check biometric available
         window.biometricAvailable = function(available) {
-            // if (available === 'false') {
-            //     showMessage('⚠️ Thiết bị không hỗ trợ sinh trắc học', 'error');
-            //     document.getElementById('biometricToggle').style.display = 'none';
-            // }
-
-            // // 🔑 resolve promise
-            // if (window._resolveBiometricAvailable) {
-            //     window._resolveBiometricAvailable(available === 'true');
-            //     delete window._resolveBiometricAvailable;
-            // }
-
-            const isAvailable = available === 'true';
-            biometricAvailableCache = isAvailable;
-
-            addLog(`Biometric available: ${available}`, 'info');
-
-            if (window._resolveBiometricAvailable) {
-                window._resolveBiometricAvailable(isAvailable);
-                delete window._resolveBiometricAvailable;
+            addLog(`biometricAvailable web: ${available}`, 'info');
+            if (available === 'false') {
+                showMessage('⚠️ Thiết bị không hỗ trợ sinh trắc học', 'error');
+                document.getElementById('biometricToggle').style.display = 'none';
+            }else {
+                isEnableBiometricSupport = true
             }
         };
 
         // ==================== INITIALIZATION ====================
-        window.addEventListener('load', async () => {
+        window.addEventListener('load', () => {
             addLog('WebView loaded successfully', 'success');
             updateUI();
             // Kiểm tra channel
@@ -460,14 +437,13 @@
 
             addLog('✓ nativeMethod channel detected', 'success');
             
-            const biometricAvailable = await checkBiometricAvailable();
-            addLog(`Biometric available check: ${biometricAvailable == "true"}`, 'info');
-             
+            checkBiometricAvailable()
+            setTimeout(() => {}, 300);
             // Kiểm tra biometric đã được enable trước đó chưa
             const wasBiometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
             const lastUserId = localStorage.getItem('lastUserId');
             
-            if (wasBiometricEnabled && lastUserId) {
+            if (isEnableBiometricSupport && wasBiometricEnabled && lastUserId) {
                 // ĐÃ CÓ BIOMETRIC TRƯỚC ĐÓ
                 biometricEnabled = true;
                 toggleSwitch.classList.add('active');
