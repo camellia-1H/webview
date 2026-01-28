@@ -217,6 +217,12 @@
             color: #333;
         }
 
+        .logged-in-screen {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
         .hidden {
             display: none;
         }
@@ -258,6 +264,12 @@
             <pre id="debugLog">Waiting for events...</pre>
         </div>
     </div>
+
+    <div class="logged-in-screen" id="loggedInScreen">
+    <h2>🎉 Đăng nhập thành công</h2>
+    <p>Chào mừng bạn đã đăng nhập vào hệ thống.</p>
+    <button class="btn btn-secondary" onclick="logout()">Đăng xuất</button>
+</div>
     
     <script>
         // ==================== STATE MANAGEMENT ====================
@@ -272,6 +284,9 @@
         const toggleSwitch = document.getElementById('toggleSwitch');
         const statusMessage = document.getElementById('statusMessage');
         const debugLogElement = document.getElementById('debugLog');
+
+        const container = document.querySelector('.container');
+        const loggedInScreen = document.getElementById('loggedInScreen');
 
         // ==================== UTILITY FUNCTIONS ====================
         function addLog(message, type = 'info') {
@@ -349,11 +364,13 @@
                 // Normal login hoặc auto-fill từ biometric
                 addLog('Normal login or biometric auto-fill', 'info');
                 showMessage('✅ Đăng nhập thành công!', 'success');
+                
             }
 
             // Reset auto-fill flag
             delete userIdInput.dataset.autoFilled;
             isLoggedIn = true;
+            updateUI();
         });
 
         // ==================== CALLBACKS FROM FLUTTER APP ====================
@@ -385,10 +402,9 @@
                 
                 showMessage('✅ Xác thực thành công! Đang đăng nhập...', 'success');
                 
-                // Auto submit sau 500ms
                 setTimeout(() => {
                     loginForm.dispatchEvent(new Event('submit'));
-                }, 500);
+                }, 300);
             } else {
                 addLog('Invalid credentials format', 'error');
                 showMessage('❌ Lỗi định dạng dữ liệu', 'error');
@@ -413,7 +429,7 @@
         // ==================== INITIALIZATION ====================
         window.addEventListener('load', () => {
             addLog('WebView loaded successfully', 'success');
-            
+            updateUI();
             // Kiểm tra channel
             if (window.nativeMethod) {
                 addLog('✓ nativeMethod channel detected', 'success');
@@ -440,18 +456,26 @@
                 setTimeout(() => {
                     addLog('Auto-requesting credentials on page load', 'info');
                     sendToApp('biometric', 'request_credentials');
-                }, 100);
+                }, 200);
             }
         });
 
-        // ==================== TEST FUNCTIONS (for debugging on browser) ====================
-        window.testReceiveCredentials = function() {
-            const testCredentials = {
-                userId: 'testuser',
-                password: 'testpass123'
-            };
-            window.credentialsRetrieved('testuser:testpass123');
-        };
+        function updateUI() {
+            if (isLoggedIn) {
+                container.classList.add('hidden');
+                loggedInScreen.style.display = 'block';
+                addLog('UI switched to logged-in screen', 'success');
+            } else {
+                container.classList.remove('hidden');
+                loggedInScreen.style.display = 'none';
+                addLog('UI switched to login screen', 'info');
+            }
+        }
+        function logout() {
+            isLoggedIn = false;
+            updateUI();
+            showMessage('👋 Đã đăng xuất', 'info');
+        }
     </script>
 </body>
 </html>
