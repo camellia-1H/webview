@@ -290,47 +290,40 @@
 
         let isEnableBiometricSupport = false;
 
-        // ==================== UTILITY FUNCTIONS ====================
-        function addLog(message, type = 'info') {
-            const timestamp = new Date().toLocaleTimeString();
-            debugLog.push(`[${timestamp}] ${type.toUpperCase()}: ${message}`);
-            debugLogElement.textContent = debugLog.slice(-10).join('\n');
-        }
-
-        function showMessage(message, type = 'info') {
-            statusMessage.textContent = message;
-            statusMessage.className = `status-message show ${type}`;
-            setTimeout(() => {
-                statusMessage.classList.remove('show');
-            }, 3000);
-        }
-
-        // ==================== SEND TO FLUTTER APP ====================
-        function sendToApp(key, value) {
-            const message = `${key}=${value}`;
-            addLog(`Sending to app: ${message}`, 'info');
-            
+        // ==================== INITIALIZATION ====================
+        window.addEventListener('load', () => {
+            addLog('WebView loaded successfully', 'success');
+            updateUI();
+            // Kiểm tra channel
             if (window.nativeMethod) {
-                window.nativeMethod.postMessage(message);
-                addLog('✓ Message sent via nativeMethod', 'success');
+                addLog('✓ nativeMethod channel detected', 'success');
+                
+                // Kiểm tra biometric có available không
+                sendToApp('biometric', 'check_biometric_available');
             } else {
-                addLog('⚠ nativeMethod channel not found', 'error');
+                addLog('⚠ nativeMethod channel NOT detected', 'error');
             }
-        }
 
-        // ==================== BIOMETRIC TOGGLE ====================
-        toggleSwitch.addEventListener('click', () => {
-            biometricEnabled = !biometricEnabled;
-            toggleSwitch.classList.toggle('active');
-            
-            if (biometricEnabled) {
-                addLog('Biometric enabled by user', 'success');
-                showMessage('Sinh trắc học đã được bật', 'success');
-            } else {
-                addLog('Biometric disabled by user', 'info');
-                showMessage('Sinh trắc học đã được tắt', 'info');
-                localStorage.removeItem('biometricEnabled');
-            }
+            setTimeout(() => {
+                // Kiểm tra biometric đã được enable trước đó chưa
+                const wasBiometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
+                const lastUserId = localStorage.getItem('lastUserId');
+                
+                if (isEnableBiometricSupport && wasBiometricEnabled && lastUserId) {
+                    // ĐÃ CÓ BIOMETRIC TRƯỚC ĐÓ
+                    biometricEnabled = true;
+                    toggleSwitch.classList.add('active');
+                    
+                    addLog(`Biometric previously enabled for user: ${lastUserId}`, 'info');
+                    showMessage(`Chào mừng trở lại! Bạn có thể dùng sinh trắc học.`, 'info');
+                    
+                    // TỰ ĐỘNG GỌI REQUEST CREDENTIALS
+                    setTimeout(() => {
+                        addLog('Auto-requesting credentials on page load', 'info');
+                        sendToApp('biometric', 'request_credentials');
+                    }, 500);
+                }
+            }, 150); 
         });
 
         // ==================== NORMAL LOGIN ====================
@@ -374,6 +367,50 @@
             isLoggedIn = true;
             updateUI();
         });
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.push(`[${timestamp}] ${type.toUpperCase()}: ${message}`);
+            debugLogElement.textContent = debugLog.slice(-10).join('\n');
+        }
+
+        function showMessage(message, type = 'info') {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message show ${type}`;
+            setTimeout(() => {
+                statusMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // ==================== SEND TO FLUTTER APP ====================
+        function sendToApp(key, value) {
+            const message = `${key}=${value}`;
+            addLog(`Sending to app: ${message}`, 'info');
+            
+            if (window.nativeMethod) {
+                window.nativeMethod.postMessage(message);
+                addLog('✓ Message sent via nativeMethod', 'success');
+            } else {
+                addLog('⚠ nativeMethod channel not found', 'error');
+            }
+        }
+
+        // ==================== BIOMETRIC TOGGLE ====================
+        toggleSwitch.addEventListener('click', () => {
+            biometricEnabled = !biometricEnabled;
+            toggleSwitch.classList.toggle('active');
+            
+            if (biometricEnabled) {
+                addLog('Biometric enabled by user', 'success');
+                showMessage('Sinh trắc học đã được bật', 'success');
+            } else {
+                addLog('Biometric disabled by user', 'info');
+                showMessage('Sinh trắc học đã được tắt', 'info');
+                localStorage.removeItem('biometricEnabled');
+            }
+        });
+
 
         // ==================== CALLBACKS FROM FLUTTER APP ====================
         // Callback khi app gửi credentials về sau khi xác thực sinh trắc học
@@ -421,42 +458,6 @@
             }
         };
 
-        // ==================== INITIALIZATION ====================
-        window.addEventListener('load', async () => {
-            addLog('WebView loaded successfully', 'success');
-            updateUI();
-            // Kiểm tra channel
-            if (window.nativeMethod) {
-                addLog('✓ nativeMethod channel detected', 'success');
-                
-                // Kiểm tra biometric có available không
-                sendToApp('biometric', 'check_biometric_available');
-            } else {
-                addLog('⚠ nativeMethod channel NOT detected', 'error');
-            }
-
-            await setTimeout(() => {
-                // Kiểm tra biometric đã được enable trước đó chưa
-                const wasBiometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
-                const lastUserId = localStorage.getItem('lastUserId');
-                
-                if (isEnableBiometricSupport && wasBiometricEnabled && lastUserId) {
-                    // ĐÃ CÓ BIOMETRIC TRƯỚC ĐÓ
-                    biometricEnabled = true;
-                    toggleSwitch.classList.add('active');
-                    
-                    addLog(`Biometric previously enabled for user: ${lastUserId}`, 'info');
-                    showMessage(`Chào mừng trở lại! Bạn có thể dùng sinh trắc học.`, 'info');
-                    
-                    // TỰ ĐỘNG GỌI REQUEST CREDENTIALS
-                    setTimeout(() => {
-                        addLog('Auto-requesting credentials on page load', 'info');
-                        sendToApp('biometric', 'request_credentials');
-                    }, 500);
-                }
-            }, 150); 
-        });
-
         function updateUI() {
             if (isLoggedIn) {
                 container.classList.add('hidden');
@@ -470,6 +471,8 @@
         }
         function logout() {
             isLoggedIn = false;
+            sendToApp('biometric', 'remove_credentials');
+            localStorage.removeItem('lastUserId');
             updateUI();
             showMessage('👋 Đã đăng xuất', 'info');
         }
