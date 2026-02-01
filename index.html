@@ -482,6 +482,9 @@
             // Reset form inputs
             userIdInput.value = '';
             passwordInput.value = '';
+
+            biometricEnabled = false;
+            toggleSwitch.classList.remove('active');
             
             // Reset auto-fill flag
             delete userIdInput.dataset.autoFilled;
