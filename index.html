@@ -474,7 +474,20 @@
             sendToApp('biometric', 'remove_credentials');
             localStorage.removeItem('lastUserId');
             updateUI();
+            resetLoginForm();
             showMessage('👋 Đã đăng xuất', 'info');
+        }
+
+        function resetLoginForm() {
+            // Reset form inputs
+            userIdInput.value = '';
+            passwordInput.value = '';
+            
+            // Reset auto-fill flag
+            delete userIdInput.dataset.autoFilled;
+            
+            // Clear status message
+            statusMessage.classList.remove('show');
         }
     </script>
 </body>
