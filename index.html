@@ -295,7 +295,7 @@
         let isEnableBiometricSupport = false;
 
         addEvent.addEventListener('click', () => {
-            window.nativeMethod.postMessage("appinfo");
+            sendToApp('screen', 'appinfo');
         });
 
         // ==================== INITIALIZATION ====================
