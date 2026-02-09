@@ -257,6 +257,8 @@
             <button type="submit" class="btn btn-primary">Đăng nhập</button>
         </form>
 
+        <button class="btn btn-primary" id="addEvent">Add event</button>
+
         <div class="status-message" id="statusMessage"></div>
 
         <div class="debug-panel">
@@ -288,7 +290,13 @@
         const container = document.querySelector('.container');
         const loggedInScreen = document.getElementById('loggedInScreen');
 
+        const addEvent = document.getElementById('addEvent');
+
         let isEnableBiometricSupport = false;
+
+        addEvent.addEventListener('click', () => {
+            window.nativeMethod.postMessage("appinfo");
+        });
 
         // ==================== INITIALIZATION ====================
         window.addEventListener('load', () => {
