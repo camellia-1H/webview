@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -502,4 +502,213 @@
         }
     </script>
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock HTML</title>
+    <style>
+        .container {
+            margin-top: 70px;
+        }
+
+        table {
+            border-collapse: collapse;
+            max-width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            padding: 4px;
+        }
+
+        a {
+            display: block;
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h3>I. JavaScript→Native呼び出し</h3>
+        <div>Message: <span id="msg"></span></div>
+        <button onclick="tryAlert()">Alert</button>
+        <button onclick="tryPrompt()">Prompt</button>
+        <button onclick="tryConfirm()">Confirm</button>
+        <table>
+            <tr>
+                <th>パラメタ</th>
+                <th>説明</th>
+                <th>実行</th>
+            </tr>
+            <tr>
+                <td>screen=qrcode</td>
+                <td>QRコード撮影画面に遷移</td>
+                <td><button onclick="goToNative('screen=qrcode')">Test</button></td>
+            </tr>
+            <tr>
+                <td>screen=appinfo</td>
+                <td>設定画面に遷移</td>
+                <td><button onclick="goToNative('screen=appinfo')">Test</button></td>
+            </tr>
+            <tr>
+                <td>screen=qrcode以外</td>
+                <td>QRコード以外画面に遷移</td>
+                <td><button onclick="goToNative('screen=accdellogin')">Test</button></td>
+            </tr>
+            <tr>
+                <td>outurl=$url</td>
+                <td>外部ブラウザの起動</td>
+                <td><button onclick="goToNative('outurl=https://www.google.com')">Test</button></td>
+            </tr>
+            <tr>
+                <td>tocall=$telnumber</td>
+                <td>電話アプリの起動</td>
+                <td><button onclick="goToNative('tocall=0120306004')">Test</button></td>
+            </tr>
+            <tr>
+                <td>share=$some_string</td>
+                <td>Share機能の呼び出し</td>
+                <td><button onclick="goToNative('share=あああ')">Test</button></td>
+            </tr>
+            <tr>
+                <td>launchWebView=$url</td>
+                <td>今開いているWebViewとは別にもう１個WebViewを起動</td>
+                <td><button onclick="goToNative('launchWebView=https://www.google.com')">Test</button></td>
+            </tr>
+            <tr>
+                <td>sendEvent=$event_string</td>
+                <td>Analyticsへの送信</td>
+                <td><button onclick="goToNative('sendEvent=screen_view,some screen title')">Test</button></td>
+            </tr>
+            <tr>
+                <td>accountdel=success</td>
+                <td>#1100 accountdel=success</td>
+                <td><button onclick="goToNative('accountdel=success')">Test</button></td>
+            </tr>
+        </table>
+
+        <h3>II. Web画面の画面遷移のフック</h3>
+        <a
+            href="mailto:test@f20a23126365d27438fe2c79d47eea822b551d76.com?cc=test2@f20a23126365d27438fe2c79d47eea822b551d76.com&subject=title&body=body">メーラーを起動 (no Error)</a>
+            <a
+            href="mailto:test@f20a23126365d27438fe2c79d47eea822b551d76.com?cc=test2@f20a23126365d27438fe2c79d47eea822b551d76.com&subject=title&body=body&errorTitle=エラータイトル&errorMessage=エラーメッセージ&button1=OK">メーラーを起動 (Error JP)</a>
+            <a
+            href="mailto:test@f20a23126365d27438fe2c79d47eea822b551d76.com?cc=test2@f20a23126365d27438fe2c79d47eea822b551d76.com&subject=title&body=body&errorTitle=Error Title&errorMessage=Error Message&button1=OK">メーラーを起動 (Error EN)</a>
+        <a
+        href="native://event/runapp?url=https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+        >PDFダウンロード</a>
+
+      <a
+        href="outurl:https%3A%2F%2Fwww.google.com/search?q=%E7%81%BD%E5%AE%B3%E7%94%A8%E4%BC%9D%E8%A8%80%E6%9D%BF+docomo"
+        >外部ブラウザ起動 outurl:</a>
+
+      <a
+        href="share:https%3A%2F%2Fwww.google.com/search?q=%E7%81%BD%E5%AE%B3%E7%94%A8%E4%BC%9D%E8%A8%80%E6%9D%BF+docomo"
+        >Share:</a>
+
+      <a
+        href="launchwebview:https%3A%2F%2Fwww.google.com/search?q=%E7%81%BD%E5%AE%B3%E7%94%A8%E4%BC%9D%E8%A8%80%E6%9D%BF+docomo"
+        >WebView起動 launchwebview:</a>
+
+
+        <h3>III. JavaScriptのフック</h3>
+        <button onclick="window.open('toughmimamorukurumapluss://');">toughmimamorukurumapluss://</button><br>
+        <button onclick="window.open('toughmimamorukurumapluss://tdcaccess?tdcIdentifyKey=123');">toughmimamorukurumapluss://tdcaccess?tdcIdentifyKey=123</button><br>
+        <button onclick="window.open('toughmimamorukurumapluss://mimamoru?id=abcd');">toughmimamorukurumapluss://mimamoru?id=abcd</button><br>
+
+        
+        <button onclick="window.open('toughmimamorukurumapluss://tdcaccess?tdcIdentifyKey=123');">toughmimamorukurumapluss://tdcaccess?tdcIdentifyKey=123</button><br>
+        
+
+<h3>IV. JavaScriptのフック - Intent</h3>
+<h4>4.1 package=jp.co.aioinissaydowa.toughmimamoru.pluss</h4>
+<button onclick="window.open('intent://stayopen/#Intent;scheme=toughmimamorukurumapluss;package=jp.co.aioinissaydowa.toughmimamoru.pluss;S.source=%s;end');">intent://stayopen/#Intent;scheme=toughmimamorukurumapluss;package=jp.co.aioinissaydowa.toughmimamoru.pluss;S.source=%s;end</button><br>
+
+
+<button onclick="window.open('intent://openlogin/#Intent;scheme=toughmimamorukurumapluss;package=jp.co.aioinissaydowa.toughmimamoru.pluss;S.source=abcd;end');">intent://openlogin/#Intent;scheme=toughmimamorukurumapluss;package=jp.co.aioinissaydowa.toughmimamoru.pluss;S.source=abcd;end</button><br>
+
+
+<h4>4.2 package=jp.co.aioinissaydowa.adapp.dev</h4>
+<button onclick="window.open('intent://stayopen/#Intent;scheme=toughmimamorukurumapluss;package=jp.co.aioinissaydowa.adapp.dev;S.source=%s;end');">intent://stayopen/#Intent;scheme=toughmimamorukurumapluss;package=jp.co.aioinissaydowa.adapp.dev;S.source=%s;end</button><br>
+
+
+<button onclick="window.open('intent://openlogin/#Intent;scheme=toughmimamorukurumapluss;package=jp.co.aioinissaydowa.adapp.dev;S.source=abcd;end');">intent://openlogin/#Intent;scheme=toughmimamorukurumapluss;package=jp.co.aioinissaydowa.adapp.dev;S.source=abcd;end</button><br>
+
+        <h3>V. Storage</h3>
+        <button onclick="getLocalStorage('appType')">localStorage appType</button><br>
+        <button onclick="getSessionStorage('token_id')">sessionStorage token_id</button><br>
+        <button onclick="getSessionStorage('os_kbn')">sessionStorage os_kbn</button><br>
+
+        <h3>VI. Cookie</h3>
+        <button onclick="getCookie()">cookie</button>
+        
+        <h3>VII. Query Param</h3>
+        <button onclick="getQueryParam('token')">token</button><br>
+        <button onclick="getQueryParam('transition')">transition</button><br>
+        <button onclick="getQueryParam('caller')">caller</button><br>
+
+        <h3>VIII. Page Source</h3>
+        <button onclick="getPageSource()">Page Source</button>
+    </div>
+    <script>
+        function goToNative(str) {
+            if (window.webkit?.messageHandlers?.nativeMethod) {
+                window.webkit.messageHandlers.nativeMethod.postMessage(str);
+            } else if (Android?.nativeMethod) {
+                Android.nativeMethod(str);
+            }
+
+        }
+        function qrcodeCallback(str) {
+            document.getElementById("msg").innerText = str;
+        }
+        function getLocalStorage(str) {
+            let msg = localStorage.getItem(str);
+            if(msg === null) msg = "null";
+            document.getElementById("msg").innerText = msg;
+        }
+        function getSessionStorage(str) {
+            let msg = sessionStorage.getItem(str);
+            if(msg === null) msg = "null";
+            document.getElementById("msg").innerText = msg;
+        }
+        function getCookie() {
+            document.getElementById("msg").innerText = document.cookie;
+        }
+        function getQueryParam(str) {
+            const urlParams = new URLSearchParams(window.location.search);
+            document.getElementById("msg").innerText = urlParams.get(str);
+        }
+        function getPageSource() {
+            document.getElementById("msg").innerText = document.documentElement.outerHTML;
+        }
+        function tryAlert() {
+            alert("Hello! I am an alert box!");
+        }
+        function tryPrompt() {
+            let person = prompt("Please enter your name", "Harry Potter");
+            if (person != null) {
+                document.getElementById("msg").innerText =
+                "Hello " + person + "! How are you today?";
+            }
+        }
+        function tryConfirm() {
+            let text = "Press a button!\nEither OK or Cancel.";
+            if (confirm(text) == true) {
+                text = "You pressed OK!";
+            } else {
+                text = "You canceled!";
+            }
+            document.getElementById("msg").innerText = text;
+        }
+    </script>
+</body>
+
 </html>
